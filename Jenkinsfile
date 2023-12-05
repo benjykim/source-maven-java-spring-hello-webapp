@@ -9,22 +9,22 @@ pipeline {
     stage('Checkout') {
       steps {
         git branch: 'main',
-        url: 'github.com/benjykim/source-maven-java-spring-hello-webapp'
+        url: 'https://github.com/benjykim/source-maven-java-spring-hello-webapp'
       }
     }
     stage('Build') {
       steps {
-        sh 'clean package'
+        sh 'mvn clean package'
       }
     }
     stage('Test') {
       steps {
-        echo 'hello world'
+        sh 'mvn test'
       }
     }
     stage('Deploy') {
       steps {
-        deploy adapters: [tomcat9(credentialsId: 'admin', url: '15.164.181.64:8080')], contextPath: null, war: '/var/lib/jenkins/workspace/maven_project/target'
+        deploy adapters: [tomcat9(credentialsId: 'tomcat-manager', url: '15.164.181.64:8080')], contextPath: null, war: 'target/hello-world.tar'
       }
     }
   }
