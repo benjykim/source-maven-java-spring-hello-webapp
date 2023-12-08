@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
       agent any
       steps {
-        git branch: 'main', url: 'https://github.com/c1t1d0s7/test-maven-java-spring-hello-webapp'
+        git branch: 'main', url: 'https://github.com/benjykim/test-maven-java-spring-hello-webapp'
       }
     }
     stage('Build') {
@@ -42,7 +42,7 @@ pipeline {
       steps {
         withDockerRegistry(credentialsId: 'docker-hub-token', url: 'https://index.docker.io/v1/') {
           sh 'docker image push c1t1d0s7/myhello:$BUILD_NUMBER'
-	  sh 'docker image push c1t1d0s7/myhello:latest'
+	  sh 'docker image push benjykim93/myhello:latest'
         }
       }
     }
@@ -51,7 +51,7 @@ pipeline {
         docker { image 'docker:dind' }
       }
       steps {
-        sh 'docker -H tcp://172.31.17.168:2375 container run --detach --name myhello -p 80:8080 c1t1d0s7/myhello:$BUILD_NUMBER'
+        sh 'docker -H tcp://172.31.28.205:2375 container run --detach --name myhello -p 80:8080 c1t1d0s7/myhello:$BUILD_NUMBER'
       }
     }
   }
