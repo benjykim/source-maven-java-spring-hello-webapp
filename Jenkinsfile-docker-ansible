@@ -50,7 +50,7 @@ pipeline {
       agent {
         docker {
           image 'ghcr.io/c1t1d0s7/jenkins-ansible-agent'
-          args '-u 0:0 -e DOCKER_HOST=tcp://172.31.28.205:2376'
+          args '-u 0:0 -e DOCKER_HOST=tcp://172.31.28.205:2375'
         }
       }
       steps {
