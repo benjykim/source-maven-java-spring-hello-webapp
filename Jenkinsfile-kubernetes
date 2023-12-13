@@ -61,7 +61,7 @@ spec:
         githubURL = "https://github.com/benjykim93/jenkins-k8s-argo.git"
         dockerhubId = 'benjykim93' //c1t1d0s7
         dockerhubRepo = 'hello-world' //hello-world
-      }
+      
       steps {
         container('git') {
           git branch: 'main', credentialsId: 'github-credential', url: "${githubURL}"
@@ -73,8 +73,10 @@ spec:
           sh 'git commit -m "Jenkins Build Number - ${BUILD_NUMBER}"'
           withCredentials([gitUsernamePassword(credentialsId: 'github-credential', gitToolName: 'Default')]) {
             sh 'git push --set-upstream origin main'
+            }
           }
         }
       }
+    }
   }
 }
