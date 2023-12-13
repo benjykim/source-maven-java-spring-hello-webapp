@@ -70,7 +70,7 @@ spec:
       environment {
         githubUser = 'benjykim' //Ryan Jang
         githubEmail = 'benjykim93@gmail.com' //c1t1d0s7@example.com
-        githubId = 'benjykim93' //c1t1d0s7 
+        githubId = 'benjykim' //c1t1d0s7 
         githubRepo = 'jenkins-k8s-argo' //jenkins-kube-deploy
         githubURL = "https://github.com/${githubId}/${githubRepo}.git"
         dockerhubId = 'benjykim93' //c1t1d0s7
