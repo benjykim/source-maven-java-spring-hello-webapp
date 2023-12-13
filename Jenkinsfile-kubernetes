@@ -12,12 +12,6 @@ spec:
     - sleep
     args:
     - infinity
-  - name: git
-    image: alpine/git
-    command:
-    - sleep
-    args:
-    - infinity
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
     command:
@@ -52,16 +46,30 @@ spec:
         }
       }
     }
+    stage('Test') {
+      steps {
+        container('maven') {
+          sh 'mvn test'
+        }
+      }
+    }
+    stage('Build & Tag & Push Docker Image') {
+      steps {
+        container('kaniko') {
+          sh 'executor --context=dir://$WORKSPACE --destination=benjykim93/myhello:$BUILD_NUMBER --destination=benjykim93/myhello:latest'
+        }
+      }
+    }
     stage('Update K8s Manifests & Push') {
       environment {
-        githubUser = 'benjykim' //Ryan Jang
-        githubEmail = 'benjykim93@gmail.com' //c1t1d0s7@example.com
-        githubId = 'benjykim' //c1t1d0s7 
-        githubRepo = 'jenkins-k8s-argo' //jenkins-kube-deploy
-        githubURL = "https://github.com/benjykim93/jenkins-k8s-argo.git"
-        dockerhubId = 'benjykim93' //c1t1d0s7
-        dockerhubRepo = 'hello-world' //hello-world
-      
+        githubUser = '<GITHUB_YOURNAME>' //Ryan Jang
+        githubEmail = '<GITHUB_EMAIL>' //c1t1d0s7@example.com
+        githubId = '<GITHUB_USERNAME>' //c1t1d0s7 
+        githubRepo = '<GITHUB_REPO_NAME>' //jenkins-kube-deploy
+        githubURL = "https://github.com/${githubId}/${githubRepo}.git"
+        dockerhubId = '<DOCKER_HUB_USERNAME>' //c1t1d0s7
+        dockerhubRepo = '<DOCKER_HUB_REPO_NAME>' //hello-world
+      }
       steps {
         container('git') {
           git branch: 'main', credentialsId: 'github-credential', url: "${githubURL}"
@@ -73,7 +81,6 @@ spec:
           sh 'git commit -m "Jenkins Build Number - ${BUILD_NUMBER}"'
           withCredentials([gitUsernamePassword(credentialsId: 'github-credential', gitToolName: 'Default')]) {
             sh 'git push --set-upstream origin main'
-            }
           }
         }
       }
